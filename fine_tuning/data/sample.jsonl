@@ -1,0 +1,2 @@
+{"instruction":"Classify interview answer quality","input":"Python is a programming language used for many applications.","output":"basic"}
+{"instruction":"Classify interview answer quality","input":"FastAPI provides async-friendly Python APIs; I used Pydantic models for validation and dependency injection for shared database access.","output":"strong"}

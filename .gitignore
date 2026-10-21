@@ -1,0 +1,35 @@
+# Dependencies and generated files
+node_modules/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+dist/
+test-results/
+playwright-report/
+logs/
+/artifacts/
+
+# Local configuration and credentials; retain placeholder examples
+.env
+.env.*
+!.env.example
+.vercel/
+.aws/
+.codex/
+.agents/
+
+# Local application data
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+*.sqlite-*
+*.sqlite3-*
+chroma_data/
+uploads/
+
+# Editor and operating-system files
+.DS_Store
+Thumbs.db
