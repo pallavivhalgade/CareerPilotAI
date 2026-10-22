@@ -3,6 +3,7 @@ dist/
 test-results/
 playwright-report/
 tests/
+server/*.test.js
 .env
 .env.*
 !.env.example

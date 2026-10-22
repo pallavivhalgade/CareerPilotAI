@@ -124,11 +124,12 @@ export default function App() {
   const authenticate = event => {
     event.preventDefault(); setAuthError('');
     perform('auth', async () => {
-      const data = await request('/auth/' + authMode, { method: 'POST', body: { email: authEmail.trim(), password }, timeout: 20000 });
+      const normalizedEmail = authEmail.trim().toLowerCase();
+      const data = await request('/auth/' + authMode, { method: 'POST', body: { email: normalizedEmail, password }, timeout: 20000 });
       if (!data.token) throw new Error('The server did not return a session. Please try again.');
       generation.current++;
-      storageSet('cp_token', data.token); storageSet('cp_email', authEmail.trim());
-      setToken(data.token); setEmail(authEmail.trim()); setAuthMode(null); setPassword('');
+      storageSet('cp_token', data.token); storageSet('cp_email', normalizedEmail);
+      setToken(data.token); setEmail(normalizedEmail); setAuthMode(null); setPassword('');
       setResult(null); setSession(null); setFeedback(null); setMessages([]); navigate('overview');
       notify(authMode === 'register' ? 'Your next chapter starts here. Welcome to your workspace.' : 'Welcome back. Let’s pick up where you left off.');
     }, error => setAuthError(error.message));

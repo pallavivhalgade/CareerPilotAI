@@ -19,12 +19,18 @@ export async function request(path, { token, body, timeout = 180000, ...options 
       body: body instanceof FormData ? body : body ? JSON.stringify(body) : undefined,
     });
     let data;
-    try { data = await response.json(); } catch { data = {}; }
+    try { data = await response.json(); }
+    catch {
+      const message = path.startsWith('/auth/')
+        ? 'The account service is unavailable. Please try again later.'
+        : 'The server returned an unexpected response. Please try again later.';
+      throw new ApiError(message, response.ok ? 503 : response.status);
+    }
     if (!response.ok) {
       let message = data.detail;
       if (Array.isArray(message)) message = message.map(item => item.msg).join('. ');
       if (response.status === 401 && token) message = 'Your session has expired. Please sign in again.';
-      if (response.status >= 500) message = 'The local server could not complete this request. Check that your Ollama model is ready, then try again.';
+      if (response.status >= 500 && !message) message = 'The service could not complete this request. Please try again later.';
       throw new ApiError(typeof message === 'string' ? message : 'Something went wrong. Please try again.', response.status);
     }
     return data;

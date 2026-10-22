@@ -185,6 +185,22 @@ test('connection failures and generated markup are handled as text', async ({ pa
   expect(await page.getByRole('log').locator('img').count()).toBe(0);
 });
 
+test('signup reports unavailable account services without opening a fake session', async ({ page }) => {
+  await page.route('**/api/auth/register', route => route.fulfill({ contentType: 'text/html', body: '<!doctype html><html>Frontend fallback</html>' }));
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Find my next move', exact: true }).click();
+  const dialog = page.getByRole('dialog', { name: 'Make your next move.' });
+  await dialog.getByLabel('Email address').fill('Candidate@Example.com');
+  await dialog.getByLabel('Password', { exact: true }).fill('correct-password');
+  await dialog.getByRole('button', { name: 'Create your workspace', exact: true }).click();
+  await expect(dialog.getByRole('alert')).toContainText('The account service is unavailable');
+  expect(await page.evaluate(() => localStorage.getItem('cp_token'))).toBeNull();
+  expect(calls.filter(call => call.path === '/dashboard')).toEqual([]);
+  await page.route('**/api/auth/register', route => route.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ detail: 'The account service is temporarily unavailable. Please try again later.' }) }));
+  await dialog.getByRole('button', { name: 'Create your workspace', exact: true }).click();
+  await expect(dialog.getByRole('alert')).toContainText('The account service is temporarily unavailable');
+});
+
 test('actual same-origin API proxy reaches the local backend', async ({ request }) => {
   test.skip(!process.env.CAREERPILOT_LIVE_API, 'Enable when the local backend is running.');
   const response = await request.get('/api/health');

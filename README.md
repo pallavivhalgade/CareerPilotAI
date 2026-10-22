@@ -21,7 +21,7 @@ React · Vite · FastAPI · SQLite · Ollama · LangChain · LangGraph · Chroma
 
 ```text
 CareerPilotAI/
-├── frontend/             # React interface and browser tests
+├── frontend/             # React interface, Vercel account API, and tests
 ├── backend/              # API, AI workflows, and backend tests
 ├── docs/                 # Preview image
 ├── fine_tuning/          # Optional experiment notes
@@ -50,7 +50,7 @@ Configuration examples: [backend](backend/.env.example) · [frontend](frontend/.
 
 The frontend is hosted on **Vercel**. Use `frontend` as the root directory, `npm run build` as the build command, and `dist` as the output directory.
 
-The live demo uses sample data. Signup and AI features require a hosted backend configured through `VITE_API_URL`.
+Hosted accounts use Neon Postgres (`DATABASE_URL`) and a server-only `SECRET_KEY`. AI features still require a connected Python backend; preview mode uses sample data.
 
 ---
 
